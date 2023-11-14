@@ -1,7 +1,7 @@
 package main
 
 import (
-	user "github.com/Nero011/cloudStorage/server/shared/kitex_gen/user/userserviec"
+	user "github.com/Nero011/cloudStorage/server/shared/kitex_gen/user/userservice"
 	"log"
 )
 
