@@ -1,4 +1,4 @@
-namespace go user
+namespace go userservice
 
 
 
@@ -24,7 +24,7 @@ struct LoginResponse{
     3: string token
 }
 
-service UserServiec{
+service UserService{
     RegisterResponse Register(1:RegisterRequest req)
     LoginResponse Login(1:LoginRequest req)
 }
