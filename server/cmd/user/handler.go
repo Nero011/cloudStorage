@@ -2,12 +2,10 @@ package main
 
 import (
 	"context"
-	"errors"
 	userservice "github.com/Nero011/cloudStorage/server/shared/kitex_gen/user"
 	"github.com/Nero011/cloudStorage/server/shared/model/user"
 	"github.com/Nero011/cloudStorage/tools/mysql"
 	"github.com/cloudwego/kitex/pkg/klog"
-	"gorm.io/gorm"
 )
 
 // UserServiecImpl implements the last service interface defined in the IDL.
@@ -15,20 +13,17 @@ type UserServiecImpl struct{}
 
 // Register implements the UserServiecImpl interface.
 func (s *UserServiecImpl) Register(ctx context.Context, req *userservice.RegisterRequest) (resp *userservice.RegisterResponse, err error) {
-	db := mysql.GetMysql()
 	u := user.User{
 		Name:     req.GetUserName(),
 		Password: req.GetUserPassword(),
 	}
-	err = db.First(&u).Error
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
+	if mysql.CheckUser(&u) {
 		resp = &userservice.RegisterResponse{
 			Success: false,
 			ErrMsg:  "user is exist",
 		}
-		return nil, nil
 	}
-	err = db.Create(&u).Error
+	err = mysql.CreateUser(&u)
 	if err != nil {
 		klog.Error("register error:", err)
 		resp = &userservice.RegisterResponse{
