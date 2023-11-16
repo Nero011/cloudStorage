@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	//userservice "github.com/Nero011/cloudStorage/server/shared/kitex_gen/user"
 	userservice "github.com/Nero011/cloudStorage/server/shared/kitex_gen/user"
 	"github.com/Nero011/cloudStorage/server/shared/model/user"
 	"github.com/Nero011/cloudStorage/tools/mysql"
@@ -41,6 +42,27 @@ func (s *UserServiecImpl) Register(ctx context.Context, req *userservice.Registe
 
 // Login implements the UserServiecImpl interface.
 func (s *UserServiecImpl) Login(ctx context.Context, req *userservice.LoginRequest) (resp *userservice.LoginResponse, err error) {
-	// TODO: Your code here...
+	u := user.User{
+		Name:     req.GetUserName(),
+		Password: req.GetUserPassword(),
+	}
+	if !mysql.SearchUser(&u) {
+		if u.Name != req.GetUserName() {
+			resp = &userservice.LoginResponse{
+				Success: false,
+				ErrMsg:  "user is not exist",
+			}
+		} else {
+			resp = &userservice.LoginResponse{
+				Success: false,
+				ErrMsg:  "password error",
+			}
+		}
+		return
+	}
+	resp = &userservice.LoginResponse{
+		Success: true,
+		ErrMsg:  "",
+	}
 	return
 }
