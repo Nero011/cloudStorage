@@ -47,3 +47,29 @@ func TestUserServiecImpl_Register(t *testing.T) {
 		})
 	}
 }
+
+func TestUserServiecImpl_Login(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		req *userservice.LoginRequest
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantResp *userservice.LoginResponse
+		wantErr  bool
+	}{}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &UserServiecImpl{}
+			gotResp, err := s.Login(tt.args.ctx, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Login() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotResp, tt.wantResp) {
+				t.Errorf("Login() gotResp = %v, want %v", gotResp, tt.wantResp)
+			}
+		})
+	}
+}

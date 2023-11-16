@@ -16,6 +16,7 @@ func CheckUser(u *user.User) bool {
 	return true
 }
 
+// insert new user
 func CreateUser(u *user.User) error {
 	if CheckUser(u) {
 		return errors.New("user is exist")
@@ -26,4 +27,14 @@ func CreateUser(u *user.User) error {
 		return err
 	}
 	return nil
+}
+
+// check user and password, for login
+func SearchUser(u *user.User) bool {
+	db := GetMysql()
+	err := db.Where("name = ?, password = ?", u.Name, u.Password).First(&u).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false
+	}
+	return true
 }

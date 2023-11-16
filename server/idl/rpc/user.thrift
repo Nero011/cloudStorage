@@ -21,7 +21,6 @@ struct LoginRequest {
 struct LoginResponse{
     1: bool success
     2: string errMsg
-    3: string token
 }
 
 service UserService{
