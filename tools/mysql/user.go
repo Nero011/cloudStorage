@@ -32,7 +32,7 @@ func CreateUser(u *user.User) error {
 // check user and password, for login
 func SearchUser(u *user.User) bool {
 	db := GetMysql()
-	err := db.Where("name = ?, password = ?", u.Name, u.Password).First(&u).Error
+	err := db.Where("name = ? AND password = ?", u.Name, u.Password).First(&u).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false
 	}

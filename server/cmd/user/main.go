@@ -2,11 +2,14 @@ package main
 
 import (
 	user "github.com/Nero011/cloudStorage/server/shared/kitex_gen/user/userservice"
+	"github.com/cloudwego/kitex/server"
 	"log"
+	"net"
 )
 
 func main() {
-	svr := user.NewServer(new(UserServiecImpl))
+	addr, _ := net.ResolveTCPAddr("tcp", "127.0.0.1:12304")
+	svr := user.NewServer(new(UserServiecImpl), server.WithServiceAddr(addr))
 
 	err := svr.Run()
 
