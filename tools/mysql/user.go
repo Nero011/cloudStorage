@@ -9,7 +9,7 @@ import (
 // check user exist or not, if exist return true
 func CheckUser(u *user.User) bool {
 	db := GetMysql()
-	err := db.First(&u).Error
+	err := db.First(&u, "name = ?", u.Name).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false
 	}

@@ -8,5 +8,8 @@ func Register(r *server.Hertz) {
 	{
 		login := root.Group("/login")
 		login.POST("/user", user.Login)
+
+		register := root.Group("/register")
+		register.POST("/user", user.Register)
 	}
 }

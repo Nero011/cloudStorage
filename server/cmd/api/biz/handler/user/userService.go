@@ -17,8 +17,8 @@ func Login(ctx context.Context, c *app.RequestContext) {
 
 	if err != nil {
 		resp = &huser.LoginResponse{
-			Bresp: huser.BasicResponse{http.StatusBadRequest, "Err request"},
-			Auth:  "",
+			BasicResp: huser.BasicResponse{http.StatusBadRequest, "Err request"},
+			Auth:      "",
 		}
 		c.JSON(http.StatusBadRequest, resp)
 		return
@@ -35,17 +35,59 @@ func Login(ctx context.Context, c *app.RequestContext) {
 
 	if !uresp.Success {
 		resp = &huser.LoginResponse{
-			Bresp: huser.BasicResponse{http.StatusBadRequest, "bad request"},
-			Auth:  "",
+			BasicResp: huser.BasicResponse{http.StatusBadRequest, "bad request"},
+			Auth:      "",
 		}
 		c.JSON(http.StatusBadRequest, resp)
 		return
 	}
 
 	resp = &huser.LoginResponse{
-		Bresp: huser.BasicResponse{http.StatusOK, "ok"},
-		Auth:  "test auth",
+		BasicResp: huser.BasicResponse{http.StatusOK, "ok"},
+		Auth:      "test auth",
 	}
 	c.JSON(http.StatusOK, resp)
 
+}
+
+func Register(ctx context.Context, c *app.RequestContext) {
+	var req huser.RegisterRequest
+	var resp *huser.RegisterResponse
+	err := c.BindJSON(&req)
+	if err != nil {
+		resp = &huser.RegisterResponse{
+			BasicResp: huser.BasicResponse{http.StatusBadRequest, "request bind wrong"},
+		}
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	uresp, err := global.GlobalUserClient.Register(ctx, &kuser.RegisterRequest{
+		UserName:     req.Name,
+		UserPassword: req.Password,
+	})
+	if err != nil {
+		resp = &huser.RegisterResponse{
+			BasicResp: huser.BasicResponse{
+				StatusCode: http.StatusInternalServerError,
+				StatusMsg:  "user rpc call error",
+			},
+		}
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+	if !uresp.Success {
+		resp = &huser.RegisterResponse{BasicResp: huser.BasicResponse{
+			StatusCode: http.StatusBadRequest,
+			StatusMsg:  uresp.ErrMsg,
+		}}
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+	resp = &huser.RegisterResponse{BasicResp: huser.BasicResponse{
+		StatusCode: http.StatusOK,
+		StatusMsg:  "",
+	}}
+	c.JSON(http.StatusOK, resp)
+	return
 }

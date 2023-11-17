@@ -7,6 +7,15 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Bresp BasicResponse `json:"bresp"`
-	Auth  string        `json:"auth"`
+	BasicResp BasicResponse `json:"basicResp"`
+	Auth      string        `json:"auth"`
+}
+
+type RegisterRequest struct {
+	Name     string `json:"username" form:"username" api.raw:"username" query:"username"`
+	Password string `json:"password"`
+}
+
+type RegisterResponse struct {
+	BasicResp BasicResponse `json:"basicResp"`
 }

@@ -23,6 +23,7 @@ func (s *UserServiecImpl) Register(ctx context.Context, req *userservice.Registe
 			Success: false,
 			ErrMsg:  "user is exist",
 		}
+		return resp, nil
 	}
 	err = mysql.CreateUser(&u)
 	if err != nil {
